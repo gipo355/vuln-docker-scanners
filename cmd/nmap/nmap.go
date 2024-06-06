@@ -21,6 +21,7 @@ type nmapFlags struct {
 	Target          string
 	Port            string
 	OutputDir       string
+	Args            []string
 	GenerateReports bool
 	GenerateSarif   bool
 	Vulner          bool
@@ -38,7 +39,7 @@ func NewCmdNmap() *cobra.Command {
 		Run:   nmapRun(&f),
 	}
 
-	utils.AddFlag(
+	utils.AddStringFlag(
 		&f.Target,
 		cmd.Flags(),
 		"target",
@@ -50,21 +51,58 @@ func NewCmdNmap() *cobra.Command {
 		log.Println(err)
 	}
 
-	utils.AddPersistentFlag(
+	utils.AddBoolFlag(
+		&f.GenerateReports,
+		cmd.Flags(),
+		"generate-reports",
+		"r",
+		true,
+		"Generate reports",
+	)
+
+	utils.AddBoolFlag(
+		&f.GenerateSarif,
+		cmd.Flags(),
+		"generate-sarif",
+		"s",
+		true,
+		"Generate sarif",
+	)
+
+	utils.AddStringFlag(
 		&f.OutputDir,
-		cmd.PersistentFlags(),
+		cmd.Flags(),
 		"output-dir",
 		"o",
 		"nmap-reports",
 		"Output directory for reports",
 	)
-	utils.AddFlag(
+
+	utils.AddStringFlag(
 		&f.Port,
 		cmd.Flags(),
 		"port",
 		"p",
 		"",
 		"Port to scan",
+	)
+
+	utils.AddBoolFlag(
+		&f.Vulner,
+		cmd.Flags(),
+		"vulner",
+		"V",
+		false,
+		"Run nmap with vulners script",
+	)
+
+	utils.AddBoolFlag(
+		&f.Vulscan,
+		cmd.Flags(),
+		"vulscan",
+		"v",
+		false,
+		"Run nmap with vulscan script",
 	)
 
 	return cmd
@@ -81,6 +119,9 @@ func nmapRun(f *nmapFlags) func(cmd *cobra.Command, args []string) {
 				GenerateReports: f.GenerateReports,
 				GenerateSarif:   f.GenerateSarif,
 				OutputDir:       f.OutputDir,
+				Vulner:          f.Vulner,
+				Vulscan:         f.Vulscan,
+				Args:            args,
 			},
 		)
 		if err != nil {

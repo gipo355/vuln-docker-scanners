@@ -7,61 +7,38 @@ import (
 )
 
 func RunNmap(n *Client) {
-	// args := os.Args[1:]
-	// if len(args) == 0 {
-	// 	log.Printf("No args provided")
-	// } else {
-	// 	for _, arg := range args {
-	// 		log.Printf("arg: %v", arg)
-	// 	}
-	// }
-
-	// log.Println("print pwd")
-	// utils.PrintPwd()
-
-	// TODO: nmap must move to its own package
-	// nmap section
-
 	log.Println("Executing nmap...")
 
-	// n, err := NewNmapClient(
-	// 	&Config{
-	// 		Target:          "localhost",
-	// 		Port:            "80",
-	// 		GenerateReports: true,
-	// 		GenerateSarif:   true,
-	// 		OutputDir:       "nmap-reports",
-	// 	},
-	// )
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	// Testing
-	// TODO: remove hardcoded args
-	nmapArgs := []string{"-sP"}
+	nmapArgs := n.Config.Args
 
 	var wg sync.WaitGroup
 
-	channels := []chan error{
-		make(chan error),
-		make(chan error),
-		make(chan error),
-	}
-	for range channels {
+	channels := []chan error{}
+
+	if len(nmapArgs) > 0 {
+		channels = append(channels, make(chan error))
 		wg.Add(1)
+
+		go n.DirectScan(nmapArgs, channels[0], &wg)
 	}
 
-	// directChan := make(chan error)
-	go n.DirectScan(nmapArgs, channels[0], &wg)
+	if n.Config.Vulscan {
+		channels = append(channels, make(chan error))
 
-	// vulscanChan := make(chan error)
-	go n.ScanWithVulscan(channels[1], &wg)
+		wg.Add(1)
 
-	// vulnerChan := make(chan error)
-	go n.ScanWithVulners(channels[2], &wg)
+		go n.ScanWithVulscan(channels[1], &wg)
+	}
 
-	// for i := 0; i < 3; i++ {
+	if n.Config.Vulner {
+		channels = append(channels, make(chan error))
+
+		wg.Add(1)
+
+		go n.ScanWithVulners(channels[2], &wg)
+	}
+
 	for i := 0; i < len(channels); i++ {
 		select {
 		// case directErr := <-directChan:
@@ -84,6 +61,7 @@ func RunNmap(n *Client) {
 			log.Println("vulscan scan finished")
 		}
 	}
+
 	wg.Wait()
 	for _, ch := range channels {
 		close(ch)
@@ -93,19 +71,28 @@ func RunNmap(n *Client) {
 
 	// parsing nmap output
 
-	if cErr := n.ConvertToJSON(Direct); cErr != nil {
-		log.Fatal(cErr)
-	}
+	if n.Config.GenerateReports && n.Config.GenerateSarif {
+		log.Println("Generating reports...")
 
-	if cErr := n.ConvertToJSON(Vulners); cErr != nil {
-		log.Fatal(cErr)
-	}
+		if len(nmapArgs) > 0 {
+			if cErr := n.ConvertToJSON(Direct); cErr != nil {
+				log.Fatal(cErr)
+			}
+			n.GenerateSarif(Direct)
+		}
 
-	if cErr := n.ConvertToJSON(Vulscan); cErr != nil {
-		log.Fatal(cErr)
-	}
+		if n.Config.Vulscan {
+			if cErr := n.ConvertToJSON(Vulners); cErr != nil {
+				log.Fatal(cErr)
+			}
+			n.GenerateSarif(Vulners)
+		}
 
-	n.GenerateSarif(Vulners)
-	n.GenerateSarif(Direct)
-	n.GenerateSarif(Vulscan)
+		if n.Config.Vulner {
+			if cErr := n.ConvertToJSON(Vulscan); cErr != nil {
+				log.Fatal(cErr)
+			}
+			n.GenerateSarif(Vulscan)
+		}
+	}
 }

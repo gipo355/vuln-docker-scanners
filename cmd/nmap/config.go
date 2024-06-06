@@ -6,6 +6,9 @@ type Config struct {
 	OutputDir       string
 	GenerateReports bool
 	GenerateSarif   bool
+	Vulner          bool
+	Vulscan         bool
+	Args            []string
 }
 
 func NewConfig(writeToFile, sarif bool, target, outputDir, port string) *Config {

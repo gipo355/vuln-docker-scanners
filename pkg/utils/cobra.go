@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func AddFlag(
+func AddStringFlag(
 	holder *string,
 	flags *pflag.FlagSet,
 	namespaceFlag string,
@@ -24,15 +24,15 @@ func AddFlag(
 	)
 }
 
-func AddPersistentFlag(
-	holder *string,
+func AddBoolFlag(
+	holder *bool,
 	flags *pflag.FlagSet,
 	namespaceFlag string,
 	short string,
-	defaultValue string,
+	defaultValue bool,
 	description string,
 ) {
-	flags.StringVarP(
+	flags.BoolVarP(
 		holder,
 		namespaceFlag,
 		short,
