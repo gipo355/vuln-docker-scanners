@@ -1,4 +1,3 @@
-# https://taskfile.dev
 version: "3"
 tasks:
   init:
@@ -15,38 +14,24 @@ tasks:
       - go install github.com/securego/gosec/v2/cmd/gosec@latest
       - go install mvdan.cc/gofumpt@latest
       # - go get
-      - go mod download
-  assets:
-    desc: Build the assets
-    cmds:
-      - echo "Building assets"
-  generate:
-    desc: Generate stuff and things
-    cmds:
-      - go generate ./...
-      # - swag init -g ./cmd/api/main.go
+      - go mod download && go mod verify
   run:
-    desc: Run the application
-    deps:
-      - assets
-      - generate
+    desc: Run the cli
     cmds:
-      - go run ./cmd/app/...
-  dev:
-    desc: Develop the api
-    deps:
-      - assets
-      - generate
-    cmds:
-      - air -c .air.api.toml
+      - go run ./cmd/cli/...
   build:
-    desc: build the api
+    desc: build the cli
     deps:
       - assets
       - generate
     cmds:
-      # - go build -o ./bin/api ./cmd/api/...
-      - go build -o=../../dist/apps/example-go-app/ ./cmd/cli
+      - go build -v -o=bin/app ./cmd/cli/main.go
+  preview:
+    desc: Preview the cli
+    deps:
+      - build
+    cmds:
+      - go run bin/app
   docker-build:
     desc: Build the docker image
     cmds:
@@ -55,13 +40,6 @@ tasks:
     desc: Push the docker image
     cmds:
       - docker buildx build -t gipo355/vuln-docker-scanners -f Dockerfile . --push
-  preview:
-    desc: Build and serve the api
-    deps:
-      - build
-    cmds:
-      # - ./bin/api
-      - ../../dist/apps/example-go-app/cli
   fix:
     desc: Fix the code
     cmds:

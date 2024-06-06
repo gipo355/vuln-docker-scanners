@@ -23,6 +23,8 @@ generate sarif reports to be uploaded to github security tab
 - understand golang versioning forlib
 - split smiattack cli with nmap in its own repo for action using the github lib and utils
 
+- add load test
+
 - make a list of all go libs and tools
 
 # splits
