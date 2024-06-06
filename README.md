@@ -1,38 +1,14 @@
-# dev moving to
+# Cli vulnerability docker scanners
 
-vuln-docker-scanners for the cli
+this is a docker cli wrapper for nmap to be used in github actions and other CI/CD pipelines
 
-vuln-docker-scanners-$tool-action for the github action
+check <https://github.com/gipo355/vuln-docker-scanners-namp-action> for example usages
 
-# Hello world docker action with go
+## nmap
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+comes ready with vulners and vulscan scripts
 
-## Inputs
-
-## `who-to-greet`
-
-**Required** The name of the person to greet. Default `"World"`.
-
-## Outputs
-
-## `time`
-
-The time we greeted you.
-
-## Example usage
-
-uses: actions/hello-world-docker-action@v1
-with:
-who-to-greet: 'Mona the Octocat'
-
-## note for nmap
-
-we are using a docker container which allows us to pull and prepare needed tools for the scan.
-
-if we were to use a js action, we would have to install nmap on the runner machine which is not ideal.
-
-golang provides efficient concurrency and minimal image + mem size for containers using alpine.
+generate sarif reports to be uploaded to github security tab
 
 # todo
 
@@ -50,11 +26,6 @@ golang provides efficient concurrency and minimal image + mem size for container
 - make a list of all go libs and tools
 
 # splits
-
-action repo
-
-- uses docker wrapper repo
-- uses github utils repo to get input
 
 cli nmap repo
 
