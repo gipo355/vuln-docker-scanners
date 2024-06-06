@@ -27,7 +27,7 @@ jobs:
           # list of Docker images to use as base name for tags
           images: |
             ghcr.io/gipo355/vuln-docker-scanners
-            gipo999/vuln-docker-scanners
+            gipo355/vuln-docker-scanners
           # generate Docker tags based on the following events/attributes
           tags: |
             type=schedule
