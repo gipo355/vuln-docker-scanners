@@ -21,9 +21,8 @@ type nmapFlags struct {
 	Target          string
 	Port            string
 	OutputDir       string
-	Args            []string
+	Flags           []string
 	GenerateReports bool
-	GenerateSarif   bool
 	Vulner          bool
 	Vulscan         bool
 }
@@ -40,6 +39,15 @@ func NewCmdNmap() *cobra.Command {
 	}
 
 	utils.AddStringFlag(
+		&f.Port,
+		cmd.Flags(),
+		"port",
+		"p",
+		"",
+		"Port to scan, pass -p- for all ports, pass -p80,443 for specific ports, pass -p80 for single port. Defaults to empty",
+	)
+
+	utils.AddStringFlag(
 		&f.Target,
 		cmd.Flags(),
 		"target",
@@ -47,9 +55,10 @@ func NewCmdNmap() *cobra.Command {
 		"localhost",
 		"Target to scan",
 	)
-	if err := utils.MarkFlagRequired(cmd, "target"); err != nil {
-		log.Println(err)
-	}
+	cmd.MarkFlagRequired("target")
+	// if err := utils.MarkFlagRequired(cmd, "target"); err != nil {
+	// 	log.Println(err)
+	// }
 
 	utils.AddBoolFlag(
 		&f.GenerateReports,
@@ -60,15 +69,6 @@ func NewCmdNmap() *cobra.Command {
 		"Generate reports",
 	)
 
-	utils.AddBoolFlag(
-		&f.GenerateSarif,
-		cmd.Flags(),
-		"generate-sarif",
-		"s",
-		true,
-		"Generate sarif",
-	)
-
 	utils.AddStringFlag(
 		&f.OutputDir,
 		cmd.Flags(),
@@ -76,15 +76,6 @@ func NewCmdNmap() *cobra.Command {
 		"o",
 		"nmap-reports",
 		"Output directory for reports",
-	)
-
-	utils.AddStringFlag(
-		&f.Port,
-		cmd.Flags(),
-		"port",
-		"p",
-		"",
-		"Port to scan",
 	)
 
 	utils.AddBoolFlag(
@@ -105,6 +96,15 @@ func NewCmdNmap() *cobra.Command {
 		"Run nmap with vulscan script",
 	)
 
+	utils.AddStringSliceFlag(
+		&f.Flags,
+		cmd.Flags(),
+		"args",
+		"a",
+		[]string{},
+		"Additional arguments to pass to nmap",
+	)
+
 	return cmd
 }
 
@@ -117,10 +117,10 @@ func nmapRun(f *nmapFlags) func(cmd *cobra.Command, args []string) {
 				Target:          f.Target,
 				Port:            f.Port,
 				GenerateReports: f.GenerateReports,
-				GenerateSarif:   f.GenerateSarif,
 				OutputDir:       f.OutputDir,
 				Vulner:          f.Vulner,
 				Vulscan:         f.Vulscan,
+				Flags:           f.Flags,
 				Args:            args,
 			},
 		)

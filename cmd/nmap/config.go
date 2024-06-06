@@ -4,11 +4,11 @@ type Config struct {
 	Target          string
 	Port            string
 	OutputDir       string
+	Flags           []string
+	Args            []string
 	GenerateReports bool
-	GenerateSarif   bool
 	Vulner          bool
 	Vulscan         bool
-	Args            []string
 }
 
 func NewConfig(writeToFile, sarif bool, target, outputDir, port string) *Config {
@@ -16,7 +16,6 @@ func NewConfig(writeToFile, sarif bool, target, outputDir, port string) *Config 
 		Target:          target,
 		Port:            port,
 		GenerateReports: writeToFile,
-		GenerateSarif:   sarif,
 		OutputDir:       outputDir,
 	}
 }

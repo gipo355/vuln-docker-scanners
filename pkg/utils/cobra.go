@@ -1,9 +1,6 @@
 package utils
 
 import (
-	"fmt"
-
-	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
@@ -41,6 +38,19 @@ func AddBoolFlag(
 	)
 }
 
-func MarkFlagRequired(cmd *cobra.Command, flag string) error {
-	return fmt.Errorf("error marking flag required: %w", cmd.MarkFlagRequired(flag))
+func AddStringSliceFlag(
+	holder *[]string,
+	flags *pflag.FlagSet,
+	namespaceFlag string,
+	short string,
+	defaultValue []string,
+	description string,
+) {
+	flags.StringSliceVarP(
+		holder,
+		namespaceFlag,
+		short,
+		defaultValue,
+		description,
+	)
 }
