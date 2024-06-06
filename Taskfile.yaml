@@ -15,23 +15,13 @@ tasks:
       - go install mvdan.cc/gofumpt@latest
       # - go get
       - go mod download && go mod verify
-  run:
-    desc: Run the cli
-    cmds:
-      - go run ./cmd/cli/...
   build:
     desc: build the cli
     deps:
       - assets
       - generate
     cmds:
-      - go build -v -o=bin/app ./cmd/cli/main.go
-  preview:
-    desc: Preview the cli
-    deps:
-      - build
-    cmds:
-      - go run bin/app
+      - go build -v -o=bin/vuln-docker-scanners .
   docker-build:
     desc: Build the docker image
     cmds:

@@ -22,12 +22,12 @@ WORKDIR /$PROJECT
 
 RUN go mod download && go mod verify
 
-RUN go build -v -o /$PROJECT/bin/$PROJECT cmd/cli/main.go
+RUN go build -v -o /$PROJECT/bin/$PROJECT .
 
 # MULTI-STAGE BUILD
 FROM alpine:3.20
 
-ARG EXECUTABLE="vuln-docker-scanners"
+ARG EXECUTABLE
 ENV PROJECT=${EXECUTABLE}
 
 # add nmap
