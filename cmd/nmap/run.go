@@ -3,42 +3,39 @@ package nmap
 import (
 	"fmt"
 	"log"
-	"os"
 	"sync"
-
-	"github.com/gipo355/vuln-docker-scanners/pkg/utils"
 )
 
-func RunNmap() {
-	args := os.Args[1:]
-	if len(args) == 0 {
-		log.Printf("No args provided")
-	} else {
-		for _, arg := range args {
-			log.Printf("arg: %v", arg)
-		}
-	}
+func RunNmap(n *Client) {
+	// args := os.Args[1:]
+	// if len(args) == 0 {
+	// 	log.Printf("No args provided")
+	// } else {
+	// 	for _, arg := range args {
+	// 		log.Printf("arg: %v", arg)
+	// 	}
+	// }
 
-	log.Println("print pwd")
-	utils.PrintPwd()
+	// log.Println("print pwd")
+	// utils.PrintPwd()
 
 	// TODO: nmap must move to its own package
 	// nmap section
 
 	log.Println("Executing nmap...")
 
-	n, err := NewNmapClient(
-		&Config{
-			Target:          "localhost",
-			Port:            "80",
-			GenerateReports: true,
-			GenerateSarif:   true,
-			OutputDir:       "nmap-reports",
-		},
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// n, err := NewNmapClient(
+	// 	&Config{
+	// 		Target:          "localhost",
+	// 		Port:            "80",
+	// 		GenerateReports: true,
+	// 		GenerateSarif:   true,
+	// 		OutputDir:       "nmap-reports",
+	// 	},
+	// )
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// Testing
 	// TODO: remove hardcoded args
