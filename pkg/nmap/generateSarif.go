@@ -4,19 +4,24 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/gipo355/vuln-docker-scanners/pkg/utils"
 )
+
+// TODO: must create a generate sarif for direct, vulner and vulscan reports
+// separately since they differ in outputs
 
 type NmapReport struct {
 	Version string `json:"Version"`
 	Host    []struct {
 		Port []struct {
-			Protocol string `json:"Protocol"`
-			PortID   int    `json:"PortID"`
-			Service  struct {
+			Service struct {
 				Name    string `json:"Name"`
 				Product string `json:"Product"`
 				Version string `json:"Version"`
 			} `json:"Service"`
+			Protocol string `json:"Protocol"`
+			PortID   int    `json:"PortID"`
 		} `json:"Port"`
 		HostAddress []struct {
 			Address string `json:"Address"`
@@ -24,47 +29,12 @@ type NmapReport struct {
 	} `json:"Host"`
 }
 
-type SarifReport struct {
-	Schema  string `json:"$schema"`
-	Version string `json:"version"`
-	Runs    []struct {
-		Tool struct {
-			Driver struct {
-				Name    string `json:"name"`
-				Version string `json:"version"`
-				Rules   []struct {
-					ID              string `json:"id"`
-					Name            string `json:"name"`
-					FullDescription struct {
-						Text string `json:"text"`
-					} `json:"fullDescription"`
-					HelpURI string `json:"helpUri"`
-				} `json:"rules"`
-			} `json:"driver"`
-		} `json:"tool"`
-		Results []struct {
-			RuleID  string `json:"ruleId"`
-			Level   string `json:"level"`
-			Message struct {
-				Text string `json:"text"`
-			} `json:"message"`
-			Locations []struct {
-				PhysicalLocation struct {
-					Address struct {
-						AbsoluteAddress string `json:"absoluteAddress"`
-					} `json:"address"`
-				} `json:"physicalLocation"`
-			} `json:"locations"`
-		} `json:"results"`
-	} `json:"runs"`
-}
-
 // GenerateSarif generates a SARIF report from the nmap output xml.
-func (n *Client) GenerateSarif() error {
-	return nil
-}
+// func (n *Client) GenerateSarif() error {
+// 	return nil
+// }
 
-func (n *Client) GenerateSarifReport(name ReportName) {
+func (n *Client) GenerateSarif(name ReportName) {
 	mainDir := n.Config.OutputDir
 	fileInput := mainDir + "/" + string(name) + "/" + string(name) + "-report.json"
 	fileOutput := mainDir + "/" + string(name) + "/" + string(name) + "-report.sarif"
@@ -75,7 +45,7 @@ func (n *Client) GenerateSarifReport(name ReportName) {
 	json.Unmarshal(nmapReportBytes, &nmapReport)
 
 	// Initialize the SARIF report
-	sarifReport := SarifReport{
+	sarifReport := utils.SarifReport2{
 		Schema:  "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
 		Version: "2.1.0",
 	}

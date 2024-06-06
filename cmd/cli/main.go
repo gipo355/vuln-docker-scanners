@@ -109,7 +109,7 @@ func main() {
 		log.Fatal(cErr)
 	}
 
-	n.GenerateSarifReport(nmap.Vulners)
-	n.GenerateSarifReport(nmap.Direct)
-	n.GenerateSarifReport(nmap.Vulscan)
+	n.GenerateSarif(nmap.Vulners)
+	n.GenerateSarif(nmap.Direct)
+	n.GenerateSarif(nmap.Vulscan)
 }

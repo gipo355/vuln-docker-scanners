@@ -10,6 +10,7 @@ type Client struct {
 	Config *Config
 }
 
+// NewNmapClient returns a new nmap client
 func NewNmapClient(c *Config) (*Client, error) {
 	path, err := exec.LookPath("nmap")
 	if err != nil {
