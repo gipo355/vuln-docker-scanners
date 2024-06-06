@@ -11,7 +11,7 @@ import (
 // TODO: must create a generate sarif for direct, vulner and vulscan reports
 // separately since they differ in outputs
 
-type NmapReport struct {
+type Report struct {
 	Version string `json:"Version"`
 	Host    []struct {
 		Port []struct {
@@ -41,7 +41,7 @@ func (n *Client) GenerateSarif(name ReportName) {
 
 	// Load the Nmap JSON report
 	nmapReportBytes, _ := os.ReadFile(fileInput)
-	var nmapReport NmapReport
+	var nmapReport Report
 	json.Unmarshal(nmapReportBytes, &nmapReport)
 
 	// Initialize the SARIF report

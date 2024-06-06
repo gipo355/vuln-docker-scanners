@@ -1,5 +1,6 @@
 package nmap
 
+// names enum
 type ReportName string
 
 const (
