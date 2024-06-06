@@ -8,6 +8,8 @@ import (
 	"github.com/gipo355/vuln-docker-scanners/pkg/utils"
 )
 
+// TODO: must implement
+
 // TODO: must create a generate sarif for direct, vulner and vulscan reports
 // separately since they differ in outputs
 
