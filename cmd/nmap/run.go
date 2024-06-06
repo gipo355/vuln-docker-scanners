@@ -15,22 +15,27 @@ func RunNmap(n *Client) {
 
 	channels := []chan error{}
 
+	currentIndex := 0
+
 	if len(nmapArgs) > 0 {
 		channels = append(channels, make(chan error))
 
-		go n.DirectScan(nmapArgs, channels[0], &wg)
+		go n.DirectScan(nmapArgs, channels[currentIndex], &wg)
+		currentIndex++
 	}
 
 	if n.Config.Vulscan {
 		channels = append(channels, make(chan error))
 
-		go n.ScanWithVulscan(channels[1], &wg)
+		go n.ScanWithVulscan(channels[currentIndex], &wg)
+		currentIndex++
 	}
 
 	if n.Config.Vulner {
 		channels = append(channels, make(chan error))
 
-		go n.ScanWithVulners(channels[2], &wg)
+		go n.ScanWithVulners(channels[currentIndex], &wg)
+		currentIndex++
 	}
 
 	for i := 0; i < len(channels); i++ {
@@ -42,21 +47,6 @@ func RunNmap(n *Client) {
 			}
 		}(i)
 	}
-	// 	var wg sync.WaitGroup
-	// for i := 0; i < len(channels); i++ {
-	// 	wg.Add(1)
-	// 	go func(i int) {
-	// 		defer wg.Done()
-	// 		select {
-	// 		case err := <-channels[i]:
-	// 			if err != nil {
-	// 				log.Panic(fmt.Errorf("error scanning: %w", err))
-	// 			}
-	// 			log.Printf("scan %d finished\n", i)
-	// 		}
-	// 	}(i)
-	// }
-	// wg.Wait()
 
 	wg.Wait()
 	for _, ch := range channels {
@@ -66,10 +56,7 @@ func RunNmap(n *Client) {
 	log.Println("nmap finished")
 
 	// parsing nmap output
-
 	if n.Config.GenerateReports {
-		log.Println("Generating reports...")
-
 		if len(nmapArgs) > 0 {
 			if cErr := n.ConvertToJSON(Direct); cErr != nil {
 				log.Fatal(cErr)
@@ -77,14 +64,14 @@ func RunNmap(n *Client) {
 			n.GenerateSarif(Direct)
 		}
 
-		if n.Config.Vulscan {
+		if n.Config.Vulner {
 			if cErr := n.ConvertToJSON(Vulners); cErr != nil {
 				log.Fatal(cErr)
 			}
 			n.GenerateSarif(Vulners)
 		}
 
-		if n.Config.Vulner {
+		if n.Config.Vulscan {
 			if cErr := n.ConvertToJSON(Vulscan); cErr != nil {
 				log.Fatal(cErr)
 			}

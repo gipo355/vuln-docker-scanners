@@ -14,6 +14,9 @@ func (n *Client) writeToStdOut(nmapArgs []string) error {
 	args := slices.Concat(nmapArgs, []string{
 		target, // target
 	})
+	if n.Config.Port != "" {
+		args = slices.Concat(args, []string{n.Config.Port})
+	}
 
 	cmd := exec.Command("nmap", args...)
 

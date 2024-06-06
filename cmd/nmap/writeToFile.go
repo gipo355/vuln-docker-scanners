@@ -23,6 +23,9 @@ func (n *Client) writeToFile(userArgs []string, dirName string, report ReportNam
 		mainDir + "/" + dirName + "/" + fileName, // output file name
 		target,                                   // target
 	})
+	if n.Config.Port != "" {
+		args = slices.Concat(args, []string{n.Config.Port})
+	}
 
 	cmd := exec.Command("nmap", args...)
 	log.Printf("cmd: %v", cmd)
