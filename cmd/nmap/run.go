@@ -1,4 +1,4 @@
-package main
+package nmap
 
 import (
 	"fmt"
@@ -6,11 +6,10 @@ import (
 	"os"
 	"sync"
 
-	"github.com/gipo355/vuln-docker-scanners/pkg/nmap"
 	"github.com/gipo355/vuln-docker-scanners/pkg/utils"
 )
 
-func main() {
+func RunNmap() {
 	args := os.Args[1:]
 	if len(args) == 0 {
 		log.Printf("No args provided")
@@ -28,8 +27,8 @@ func main() {
 
 	log.Println("Executing nmap...")
 
-	n, err := nmap.NewNmapClient(
-		&nmap.Config{
+	n, err := NewNmapClient(
+		&Config{
 			Target:          "localhost",
 			Port:            "80",
 			GenerateReports: true,
@@ -97,19 +96,19 @@ func main() {
 
 	// parsing nmap output
 
-	if cErr := n.ConvertToJSON(nmap.Direct); cErr != nil {
+	if cErr := n.ConvertToJSON(Direct); cErr != nil {
 		log.Fatal(cErr)
 	}
 
-	if cErr := n.ConvertToJSON(nmap.Vulners); cErr != nil {
+	if cErr := n.ConvertToJSON(Vulners); cErr != nil {
 		log.Fatal(cErr)
 	}
 
-	if cErr := n.ConvertToJSON(nmap.Vulscan); cErr != nil {
+	if cErr := n.ConvertToJSON(Vulscan); cErr != nil {
 		log.Fatal(cErr)
 	}
 
-	n.GenerateSarif(nmap.Vulners)
-	n.GenerateSarif(nmap.Direct)
-	n.GenerateSarif(nmap.Vulscan)
+	n.GenerateSarif(Vulners)
+	n.GenerateSarif(Direct)
+	n.GenerateSarif(Vulscan)
 }
