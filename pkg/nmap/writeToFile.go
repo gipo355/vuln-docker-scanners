@@ -16,7 +16,6 @@ func (n *Client) writeToFile(userArgs []string, dirName string, report ReportNam
 
 	mainDir := n.Config.OutputDir
 
-	// TODO: don't hardcode the directory name and the file name
 	fileName := string(report) + "-report"
 
 	args := slices.Concat(userArgs, []string{
@@ -85,7 +84,7 @@ func (n *Client) writeToFile(userArgs []string, dirName string, report ReportNam
 	}
 
 	// wait for the command to finish
-	if err := cmd.Wait(); err != nil {
+	if err = cmd.Wait(); err != nil {
 		return fmt.Errorf("error waiting for command: %w", err)
 	}
 
