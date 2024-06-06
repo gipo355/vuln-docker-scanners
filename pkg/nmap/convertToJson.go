@@ -64,7 +64,7 @@ func (n *Client) ConvertToJSON(name ReportName) error {
 
 	// Attempt to format the data
 	if err = formatter.Format(&templateData, "" /* no template content for JSON */); err != nil {
-		// html template could not be parsed or some other issue occured
+		// html template could not be parsed or some other issue occurred
 		return fmt.Errorf("failed to format data: %w", err)
 	}
 

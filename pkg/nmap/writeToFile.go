@@ -10,7 +10,7 @@ import (
 	"slices"
 )
 
-// writeToFile writes the nmap output to a file in the reports directory
+// writeToFile writes the nmap output to a file in the reports directory.
 func (n *Client) writeToFile(userArgs []string, dirName string, report ReportName) error {
 	target := n.Config.Target
 
