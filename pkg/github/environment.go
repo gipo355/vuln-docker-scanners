@@ -33,6 +33,12 @@ type Environment struct {
 	// /home/runner/work/_temp/_runner_file_commands/set_output_a50ef383-b063-46d9-9157-57953fc9f3f0.
 	// For more information, see "Workflow commands for GitHub Actions."
 	GITHUB_OUTPUT string
+	// GITHUB_TOKEN	A GitHub App installation access token scoped to the repository containing the
+	// workflow file. For more information, see "Authenticating with the GITHUB_TOKEN
+	// secret." Note: GitHub Actions does not support token substitution in environment variables.
+	// Can be used to authenticate to create issues, pull requests, etc.
+	// Must be passed via env explicitly
+	GITHUB_TOKEN string
 	// GITHUB_ENV	The path on the runner to the file that sets variables from workflow commands. The
 	// path to this file is unique to the current step and changes for each step in a job. For
 	// example,
@@ -236,5 +242,6 @@ func NewGitHubEnvironment() (*Environment, error) {
 		RUNNER_TEMP:                os.Getenv("RUNNER_TEMP"),
 		RUNNER_TOOL_CACHE:          os.Getenv("RUNNER_TOOL_CACHE"),
 		GITHUB_STATE:               os.Getenv("GITHUB_STATE"),
+		GITHUB_TOKEN:               os.Getenv("GITHUB_TOKEN"),
 	}, nil
 }

@@ -10,6 +10,8 @@ comes ready with vulners and vulscan scripts
 
 generate sarif reports to be uploaded to github security tab
 
+## load test
+
 # todo
 
 - add licenses
@@ -38,18 +40,6 @@ utils repo
 
 - provides github utils like getRepo, getIssue, etc
 
-# libs
-
-nmap formatter already available
-<https://github.com/vdjagilev/nmap-formatter/wiki/Use-as-a-library>
-<https://github.com/vdjagilev/nmap-formatter>
-
-<https://gist.github.com/PSJoshi/1ddb53b42a1b099355df9eac86ced222>
-
-# CREDITS
-
-thank you @vdjagilev for the nmap formatter lib
-
 # note
 
 requires `--network=host` to run nmap in docker
@@ -69,3 +59,17 @@ example:
 we encapsulate the nmap command to be able to extend this cli with more programs later on
 
 `docker run --network=host --workdir=/app --volume .:/app gipo355/vuln-docker-scanners nmap --vulner --vulscan --target=localhost --port=80 --generate-reports --generate-sarif`
+
+# references and libs
+
+<https://github.com/vmware-tanzu/sonobuoy/blob/main/cmd/sonobuoy/app/delete.go#L38-L58>
+
+nmap formatter already available
+<https://github.com/vdjagilev/nmap-formatter/wiki/Use-as-a-library>
+<https://github.com/vdjagilev/nmap-formatter>
+
+<https://gist.github.com/PSJoshi/1ddb53b42a1b099355df9eac86ced222>
+
+# CREDITS
+
+thank you @vdjagilev for the nmap formatter lib
