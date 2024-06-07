@@ -1,11 +1,15 @@
 package nmap
 
 import (
+	"context"
 	"log"
 	"sync"
 )
 
 func Run(n *Client) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	log.Println("Executing nmap...")
 
 	// Testing
@@ -20,32 +24,39 @@ func Run(n *Client) {
 	if len(nmapArgs) > 0 {
 		channels = append(channels, make(chan error))
 
-		go n.DirectScan(nmapArgs, channels[currentIndex], &wg)
+		go n.DirectScan(nmapArgs, channels[currentIndex], &wg, ctx)
 		currentIndex++
 	}
 
 	if n.Config.Vulscan {
 		channels = append(channels, make(chan error))
 
-		go n.ScanWithVulscan(channels[currentIndex], &wg)
+		go n.ScanWithVulscan(channels[currentIndex], &wg, ctx)
 		currentIndex++
 	}
 
 	if n.Config.Vulner {
 		channels = append(channels, make(chan error))
 
-		go n.ScanWithVulners(channels[currentIndex], &wg)
+		go n.ScanWithVulners(channels[currentIndex], &wg, ctx)
 		currentIndex++
 	}
 
 	for i := 0; i < len(channels); i++ {
+
 		wg.Add(1)
-		go func(i int) {
-			err := <-channels[i]
-			if err != nil {
-				log.Fatal(err)
+
+		go func(i int, ctx context.Context) {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				err := <-channels[i]
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
-		}(i)
+		}(i, ctx)
 	}
 
 	wg.Wait()
