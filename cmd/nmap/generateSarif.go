@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/gipo355/vuln-docker-scanners/pkg/utils"
+	"github.com/gipo355/vuln-docker-scanners/pkg/sarif"
 )
 
 // TODO: must implement
@@ -47,7 +47,7 @@ func (n *Client) GenerateSarif(name ReportName) {
 	json.Unmarshal(nmapReportBytes, &nmapReport)
 
 	// Initialize the SARIF report
-	sarifReport := utils.SarifReport2{
+	sarifReport := sarif.SarifReport2{
 		Schema:  "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
 		Version: "2.1.0",
 	}

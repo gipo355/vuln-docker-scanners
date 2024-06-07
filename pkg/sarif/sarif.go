@@ -1,4 +1,4 @@
-package utils
+package sarif
 
 type SarifReport struct {
 	Version string `json:"version"`

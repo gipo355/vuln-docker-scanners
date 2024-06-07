@@ -1,4 +1,4 @@
-package utils
+package sarif
 
 type SarifReport2 struct {
 	Schema  string `json:"$schema"`

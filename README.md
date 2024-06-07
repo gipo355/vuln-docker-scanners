@@ -1,70 +1,50 @@
 # Cli vulnerability docker scanners
 
-this is a docker cli wrapper for nmap to be used in github actions and other CI/CD pipelines
+This is a docker cli wrapper for various tools to be used in github actions and other CI/CD pipelines
 
 check <https://github.com/gipo355/vuln-docker-scanners-namp-action> for example usages
 
 ## nmap
 
-comes ready with vulners and vulscan scripts
+- comes ready with vulners and vulscan scripts
+- generate sarif reports to be uploaded to github security tab
 
-generate sarif reports to be uploaded to github security tab
+## load test: TODO
 
-## load test
+- uses wrk to generate load tests
 
-# todo
+# Usage
 
-- add licenses
-- fork vulner repo
-- copy vulner scripts in continer
-- add more nmap options
-- create auto release and docker publish on tag
-- generate sarif report
-- add cobra and viper
-- split github utils in its own lib
-- understand golang versioning forlib
-- split smiattack cli with nmap in its own repo for action using the github lib and utils
+- requires `--network=host` to run nmap in docker to access the host network
 
-- add load test
+- needs a volume mounted to $workdir to extract reports
 
-- make a list of all go libs and tools
+- github will pass all environment variables to the docker container, mount the volumes and set the workdir
+  _(this is why we don't set workdir by default, to provide compatibility with github actions)_
 
-# splits
+- if using this container directly as a github action, github won't pass `--network=host` flag, so you need to run the action
+  as nodejs and run this container inside the nodejs action with `exec` or `spawn` to pass the `--network=host` flag
 
-cli nmap repo
-
-- provides commands like scan, list, etc
-- provides writeToFile, writeToSarif, output to console
-
-utils repo
-
-- provides github utils like getRepo, getIssue, etc
-
-# note
-
-requires `--network=host` to run nmap in docker
-
-also needs a volume mounted to $workdir to extract reports
-
+```
 set workdir with `--workdir` flag
-
-_note we don't set workdir by default to provide compatibility with github actions_
-
 by default it will emit them in $workdir/$report-dir/$report-name/$report-name.ext
-
 changing the workdir will change the location of the reports
-
 example:
+`docker run --network=host --workdir=/app --volume .:/app gipo355/vuln-docker-scanners nmap --vulner=true --vulscan=true --target=localhost --port=80 --generate-reports=true --generate-sarif=true`
+```
 
-we encapsulate the nmap command to be able to extend this cli with more programs later on
+# Notes
 
-`docker run --network=host --workdir=/app --volume .:/app gipo355/vuln-docker-scanners nmap --vulner --vulscan --target=localhost --port=80 --generate-reports --generate-sarif`
+we could use the nmap alpine container directly actually, but we need to install the vulners and vulscan scripts.
+and we would still need to parse the xml output to generate sarif reports in a separate step.
+
+This lib aims to be an extensible collection of tools to be used in CI/CD pipelines, specifically made for github.
 
 # references and libs
 
 <https://github.com/vmware-tanzu/sonobuoy/blob/main/cmd/sonobuoy/app/delete.go#L38-L58>
 
-nmap formatter already available
+nmap xml formatter already available
 <https://github.com/vdjagilev/nmap-formatter/wiki/Use-as-a-library>
 <https://github.com/vdjagilev/nmap-formatter>
 
@@ -72,4 +52,6 @@ nmap formatter already available
 
 # CREDITS
 
-thank you @vdjagilev for the nmap formatter lib
+thanks to @vdjagilev for the nmap formatter lib to parse nmap xml output
+
+Made with cobra, go

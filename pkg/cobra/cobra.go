@@ -1,4 +1,4 @@
-package utils
+package cobra
 
 import (
 	"github.com/spf13/pflag"

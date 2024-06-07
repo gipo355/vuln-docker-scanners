@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-func RunNmap(n *Client) {
+func Run(n *Client) {
 	log.Println("Executing nmap...")
 
 	// Testing
@@ -58,24 +58,24 @@ func RunNmap(n *Client) {
 	// parsing nmap output
 	if n.Config.GenerateReports {
 		if len(nmapArgs) > 0 {
-			if cErr := n.ConvertToJSON(Direct); cErr != nil {
+			if cErr := n.CreateJSONReport(Direct); cErr != nil {
 				log.Fatal(cErr)
 			}
-			n.GenerateSarif(Direct)
+			// n.GenerateSarif(Direct)
 		}
 
 		if n.Config.Vulner {
-			if cErr := n.ConvertToJSON(Vulners); cErr != nil {
+			if cErr := n.CreateJSONReport(Vulners); cErr != nil {
 				log.Fatal(cErr)
 			}
-			n.GenerateSarif(Vulners)
+			// n.GenerateSarif(Vulners)
 		}
 
 		if n.Config.Vulscan {
-			if cErr := n.ConvertToJSON(Vulscan); cErr != nil {
+			if cErr := n.CreateJSONReport(Vulscan); cErr != nil {
 				log.Fatal(cErr)
 			}
-			n.GenerateSarif(Vulscan)
+			// n.GenerateSarif(Vulscan)
 		}
 	}
 }

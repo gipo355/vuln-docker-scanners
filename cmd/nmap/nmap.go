@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/gipo355/vuln-docker-scanners/pkg/utils"
+	utils "github.com/gipo355/vuln-docker-scanners/pkg/cobra"
 )
 
 // must replicate the following command:
@@ -128,6 +128,6 @@ func nmapRun(f *nmapFlags) func(cmd *cobra.Command, args []string) {
 			log.Fatal(err)
 		}
 
-		RunNmap(n)
+		Run(n)
 	}
 }

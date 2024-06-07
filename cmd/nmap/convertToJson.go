@@ -9,10 +9,10 @@ import (
 	"github.com/vdjagilev/nmap-formatter/v3/formatter"
 )
 
-// ConvertToJSON converts the nmap xml report to json.
+// CreateJSONReport converts the nmap xml report to json.
 // Specify the name of the report to convert.
 // Can be either "vulscan", "direct", or "vulners".
-func (n *Client) ConvertToJSON(name ReportName) error {
+func (n *Client) CreateJSONReport(name ReportName) error {
 	mainDir := n.Config.OutputDir
 	fileInput := mainDir + "/" + string(name) + "/" + string(name) + "-report.xml"
 	fileOutput := mainDir + "/" + string(name) + "/" + string(name) + "-report.json"
