@@ -13,6 +13,11 @@ check <https://github.com/gipo355/vuln-docker-scanners-namp-action> for example 
 
 - uses wrk to generate load tests
 
+### small lib for github
+
+to be separated
+sdk available on <https://github.com/octokit/go-sdk> too
+
 # Usage
 
 - requires `--network=host` to run nmap in docker to access the host network
