@@ -20,7 +20,7 @@ func (n *Client) ScanWithVulners(c chan<- error, wg *sync.WaitGroup, ctx context
 	)
 
 	if n.Config.GenerateReports {
-		c <- n.writeToFile(args, "vulners", Vulners)
+		c <- n.writeToFile(args, string(Vulner), Vulner)
 		return
 	}
 

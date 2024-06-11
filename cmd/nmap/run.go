@@ -76,7 +76,7 @@ func Run(n *Client) {
 		}
 
 		if n.Config.Vulner {
-			if cErr := n.CreateJSONReport(Vulners); cErr != nil {
+			if cErr := n.CreateJSONReport(Vulner); cErr != nil {
 				log.Fatal(cErr)
 			}
 			// n.GenerateSarif(Vulners)

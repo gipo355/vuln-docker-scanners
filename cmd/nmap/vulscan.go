@@ -19,7 +19,7 @@ func (n *Client) ScanWithVulscan(c chan<- error, wg *sync.WaitGroup, ctx context
 	)
 
 	if n.Config.GenerateReports {
-		c <- n.writeToFile(args, "vulscan", Vulscan)
+		c <- n.writeToFile(args, string(Vulscan), Vulscan)
 		return
 	}
 
